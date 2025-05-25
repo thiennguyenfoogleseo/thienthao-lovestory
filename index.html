@@ -1,87 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Days of Love ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Đếm Ngày Yêu ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="menu-icon" id="menuIconToggle">☰</div> <!-- Hamburger icon -->
+    <div class="app-wrapper">
+        <div class="app-container" id="appContainer">
+            <div class="menu-icon" id="menuIconToggle">☰</div>
 
-        <header>
-            <h1 id="appTitle">Been Love Memory</h1>
-        </header>
+            <header class="app-header">
+                <h1 id="appTitleDisplay">Been Love Memory</h1>
+            </header>
 
-        <main class="content-area">
-            <div class="couple-display">
-                <div class="partner">
-                    <div class="avatar-placeholder" id="avatar1Placeholder">
-                        <!-- You can put an <img> tag here if you implement image uploads later -->
+            <main class="main-content">
+                <div class="couple-info">
+                    <div class="partner-details">
+                        <div class="avatar-display" id="avatar1DisplayContainer">
+                            <img id="avatar1Image" src="" alt="Partner 1">
+                        </div>
+                        <span class="partner-name" id="partner1NameDisplay">Partner 1</span>
                     </div>
-                    <span class="partner-name" id="partner1NameDisplay"></span>
-                </div>
-                <div class="heart-icon-main">❤️</div>
-                <div class="partner">
-                    <div class="avatar-placeholder" id="avatar2Placeholder">
-                        <!-- You can put an <img> tag here if you implement image uploads later -->
+                    <div class="heart-separator">
+                        <svg viewBox="0 0 32 29.6">
+                            <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+                        </svg>
                     </div>
-                    <span class="partner-name" id="partner2NameDisplay"></span>
-                </div>
-            </div>
-
-            <div class="days-counter-wrapper">
-                <div class="days-circle">
-                    <span class="love-status-text" id="loveStatus">Đang yêu</span>
-                    <span class="days-count-number" id="daysCountNumber">0</span>
-                    <span class="days-label-text" id="daysLabel">Ngày</span>
-                </div>
-            </div>
-        </main>
-
-        <div class="settings-panel" id="settingsPanel">
-            <div class="settings-content">
-                <h2>Settings & Info</h2>
-                <div class="input-section">
-                    <label for="partner1NameInput">Your Name:</label>
-                    <input type="text" id="partner1NameInput" placeholder="e.g., Alex">
-
-                    <label for="partner2NameInput">Partner's Name:</label>
-                    <input type="text" id="partner2NameInput" placeholder="e.g., Jamie">
-
-                    <label for="anniversaryDateInput">Our Special Date:</label>
-                    <input type="date" id="anniversaryDateInput">
-                    <button id="saveDataButton">Set/Update</button>
+                    <div class="partner-details">
+                        <div class="avatar-display" id="avatar2DisplayContainer">
+                            <img id="avatar2Image" src="" alt="Partner 2">
+                        </div>
+                        <span class="partner-name" id="partner2NameDisplay">Partner 2</span>
+                    </div>
                 </div>
 
-                <div class="customization-section">
-                    <label for="appTitleInput">App Title:</label>
-                    <input type="text" id="appTitleInput" placeholder="e.g., Been Love Memory">
-
-                    <label for="loveStatusTextInput">Status Text (above count):</label>
-                    <input type="text" id="loveStatusTextInput" placeholder="e.g., Đang yêu">
-
-                    <label for="daysLabelTextInput">Days Label (below count):</label>
-                    <input type="text" id="daysLabelTextInput" placeholder="e.g., Ngày">
-
-                    <label for="backgroundImageUrlInput">Background Image URL:</label>
-                    <input type="text" id="backgroundImageUrlInput" placeholder="Paste image URL here">
-
-                    <button id="applyCustomizationButton">Apply Customization</button>
-                    <button id="removeBackgroundButton">Remove Background</button>
+                <div class="days-progress">
+                    <div class="days-circle-outer">
+                        <div class="days-circle-inner">
+                            <span class="days-status" id="daysStatusDisplay">Đang yêu</span>
+                            <span class="days-count" id="daysCountDisplay">0</span>
+                            <span class="days-unit" id="daysUnitDisplay">Ngày</span>
+                        </div>
+                    </div>
                 </div>
-
-                 <div id="milestonesDisplayContainer" class="milestones-section">
-                    <h4>Milestones</h4>
-                    <ul id="milestonesList"></ul>
-                </div>
-                <button id="closeSettingsButton" class="close-settings-btn">Close</button>
-            </div>
+            </main>
         </div>
     </div>
 
+    <div class="settings-panel-overlay" id="settingsPanelOverlay">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button id="closeSettingsButton" class="close-button">×</button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-group">
+                    <h3>Couple</h3>
+                    <label for="partner1NameInput">Your Name:</label>
+                    <input type="text" id="partner1NameInput">
+                    <label for="partner1AvatarInput">Your Avatar:</label>
+                    <input type="file" id="partner1AvatarInput" accept="image/*">
+                    <button class="remove-avatar-btn" data-partner="1">Remove Avatar</button>
+
+                    <label for="partner2NameInput">Partner's Name:</label>
+                    <input type="text" id="partner2NameInput">
+                    <label for="partner2AvatarInput">Partner's Avatar:</label>
+                    <input type="file" id="partner2AvatarInput" accept="image/*">
+                    <button class="remove-avatar-btn" data-partner="2">Remove Avatar</button>
+
+                    <label for="anniversaryDateInput">Our Special Date:</label>
+                    <input type="date" id="anniversaryDateInput">
+                </div>
+
+                <div class="setting-group">
+                    <h3>Display Texts</h3>
+                    <label for="appTitleInput">App Title:</label>
+                    <input type="text" id="appTitleInput">
+                    <label for="daysStatusInput">Status Text (e.g., Đang yêu):</label>
+                    <input type="text" id="daysStatusInput">
+                    <label for="daysUnitInput">Days Unit (e.g., Ngày):</label>
+                    <input type="text" id="daysUnitInput">
+                </div>
+
+                <div class="setting-group">
+                    <h3>Appearance</h3>
+                    <label for="backgroundImageUrlInput">Background Image URL (optional):</label>
+                    <input type="text" id="backgroundImageUrlInput" placeholder="Paste direct image URL">
+                    <button id="removeBackgroundButton">Remove Background Image</button>
+                </div>
+                 <button id="saveAllSettingsButton">Save All Settings</button>
+
+                <div class="setting-group milestones-container">
+                    <h3>Upcoming Milestones</h3>
+                    <ul id="milestonesList"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

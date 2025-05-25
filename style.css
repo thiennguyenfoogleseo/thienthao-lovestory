@@ -7,281 +7,321 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: #fdecf2; /* Default soft pink background */
-    color: #fff; /* Default text color, good for dark backgrounds */
+    background-color: #fdf6f9; /* Very light pink for OUTSIDE app */
+    color: #444;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align to top for potential scroll */
     min-height: 100vh;
-    overflow: hidden; /* Prevent scrollbars from temporary content overflow */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: background-image 0.5s ease-in-out;
+    padding-top: env(safe-area-inset-top); /* For notch consideration */
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.app-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .app-container {
     width: 100%;
-    height: 100vh; /* Full viewport height */
-    max-width: 500px; /* Max width for app-like feel on desktop */
-    margin: auto; /* Center on larger screens */
+    max-width: 420px;
+    min-height: 100vh; /* If using padding-top on body, this might need adjustment or use height:100% */
+    background-color: #f2e6f3; /* Light purplish-pink for app background */
     display: flex;
     flex-direction: column;
-    position: relative; /* For absolute positioning of settings panel */
-    overflow: hidden; /* Crucial for keeping content within app bounds */
-    background-color: rgba(0, 0, 0, 0.1); /* Slight overlay if no background image */
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    overflow: hidden; /* Important */
 }
+
+/* Background Image Handling on App Container */
+.app-container.custom-background-active {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* If custom background is set, make text elements have stronger shadows */
+.app-container.custom-background-active .app-header h1,
+.app-container.custom-background-active .partner-name,
+.app-container.custom-background-active .menu-icon {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6), 0 0 5px rgba(0,0,0,0.4);
+}
+.app-container.custom-background-active .days-circle-inner {
+    background-color: rgba(255, 255, 255, 0.3); /* More transparent for background image */
+}
+
 
 /* Menu Icon */
 .menu-icon {
     position: absolute;
-    top: 20px;
+    top: 25px;
     left: 20px;
-    font-size: 28px;
+    font-size: 26px;
     color: #fff;
     cursor: pointer;
-    z-index: 1001; /* Above settings panel when closed, below when open */
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    z-index: 1001;
+    text-shadow: 1px 1px 0px #c1a8c9, 1px 1px 2px rgba(90, 50, 90, 0.5);
 }
 
 /* Header */
-header {
+.app-header {
     padding: 20px;
     text-align: center;
-    margin-top: 30px; /* Space for menu icon */
+    margin-top: 40px;
 }
 
-#appTitle {
+#appTitleDisplay {
     font-family: 'Dancing Script', cursive;
-    font-size: 2.2em;
+    font-size: 2.3em;
     color: #fff;
     font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    text-shadow: 1px 1px 0px #c1a8c9, 2px 2px 3px rgba(90, 50, 90, 0.7);
 }
 
 /* Main Content Area */
-.content-area {
+.main-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center the content vertically */
+    justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 20px 15px;
 }
 
-/* Couple Display */
-.couple-display {
+/* Couple Info Section */
+.couple-info {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    max-width: 350px;
-    margin-bottom: 30px;
+    max-width: 320px; /* Adjusted for balance */
+    margin-bottom: 40px;
 }
 
-.partner {
+.partner-details {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px; /* Give some width for name wrapping */
 }
 
-.avatar-placeholder {
-    width: 70px;
-    height: 70px;
-    background-color: rgba(255, 255, 255, 0.3);
+.avatar-display {
+    width: 100px;  /* Size from image */
+    height: 100px; /* Size from image */
     border-radius: 50%;
-    margin: 0 auto 10px auto;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    /* Add background images here for default avatars if desired */
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">👤</text></svg>'); /* Simple person icon */
+    background-color: rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Default icon - dark purple for better contrast on light bg */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%235a325a"><circle cx="50" cy="35" r="15"/><path d="M50 52.5c-13.807 0-25 11.193-25 25v7.5h50v-7.5c0-13.807-11.193-25-25-25z"/></svg>');
     background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
 }
 
+.avatar-display img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
 .partner-name {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.4em;
+    font-size: 1.3em; /* Adjusted from image */
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 1px rgba(90, 50, 90, 0.6);
+    word-wrap: break-word; /* Allow names to wrap if long */
 }
 
-.heart-icon-main {
-    font-size: 2.5em;
-    color: #ff69b4; /* Hot pink */
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    animation: pulse 1.5s infinite ease-in-out;
+.heart-separator svg {
+    width: 35px; /* Adjusted from image */
+    height: auto;
+    fill: #ff69b4;
+    filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.25));
+    animation: pulseHeart 1.7s infinite ease-in-out;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
+@keyframes pulseHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
 }
 
-/* Days Counter */
-.days-counter-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px; /* Space from couple display */
+/* Days Progress Section */
+.days-progress {
+    margin-top: 20px; /* Space from couple info */
 }
 
-.days-circle {
-    width: 200px;
-    height: 200px;
-    border: 7px solid #ff69b4; /* Hot pink border */
+.days-circle-outer {
+    width: 200px; /* Adjusted from image */
+    height: 200px;/* Adjusted from image */
     border-radius: 50%;
+    padding: 7px;
+    background: #ff69b4; /* Hot Pink for glow */
+    box-shadow: 0 0 12px #ff69b4, 0 0 20px #ff69b4, inset 0 0 8px rgba(0,0,0,0.1);
+}
+
+.days-circle-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.1); /* Slight transparency */
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5), inset 0 0 10px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.25);
 }
 
-.love-status-text {
+.days-status {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.3em;
-    color: #fce4ec; /* Light pink */
-    margin-bottom: 5px;
+    font-size: 1.2em; /* Adjusted from image */
+    color: #ffe0f0;
+    margin-bottom: 0px;
 }
 
-.days-count-number {
-    font-size: 4.5em;
-    font-weight: 700;
+.days-count {
+    font-size: 4.5em; /* Adjusted from image */
+    font-weight: 800;
     color: #fff;
-    line-height: 1;
+    line-height: 1.1;
+    text-shadow: 1px 1px 0 #d1abd9, 1px 1px 2px rgba(0,0,0,0.15);
 }
 
-.days-label-text {
+.days-unit {
     font-family: 'Dancing Script', cursive;
-    font-size: 1.3em;
-    color: #fce4ec; /* Light pink */
-    margin-top: 5px;
+    font-size: 1.2em; /* Adjusted from image */
+    color: #ffe0f0;
+    margin-top: 0px;
 }
 
 /* Settings Panel */
-.settings-panel {
-    position: absolute;
+.settings-panel-overlay {
+    position: fixed;
     top: 0;
-    left: -100%; /* Start off-screen */
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(40, 28, 33, 0.98); /* Dark, slightly transparent */
-    color: #f0f0f0;
-    transition: left 0.4s ease-in-out;
-    z-index: 1000;
-    overflow-y: auto; /* Allow scrolling if content is too long */
-    padding: 20px;
-    padding-top: 60px; /* Space for menu icon to be visible */
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1002;
+    display: none;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
+.settings-panel-overlay.open { display: flex; }
 
-.settings-panel.open {
-    left: 0; /* Slide in */
+.settings-panel {
+    width: 90%;
+    max-width: 360px;
+    height: 100%;
+    background-color: #302038;
+    color: #e0c8e8;
+    box-shadow: 3px 0 12px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
 }
+.settings-panel-overlay.open .settings-panel { transform: translateX(0); }
 
-.settings-content {
-    max-width: 400px;
-    margin: 0 auto;
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-
-.settings-panel h2 {
-    text-align: center;
-    margin-bottom: 25px;
+.settings-header h2 {
     font-family: 'Dancing Script', cursive;
-    font-size: 2em;
-    color: #ffaec9;
+    font-size: 1.7em;
+    color: #f0d8f8;
+}
+.close-button {
+    background: none; border: none;
+    color: #e0c8e8; font-size: 2.1em;
+    cursor: pointer; line-height: 1; padding: 0 5px;
 }
 
-.input-section, .customization-section, .milestones-section {
-    margin-bottom: 25px;
-    padding: 15px;
-    background-color: rgba(255,255,255,0.05);
-    border-radius: 8px;
+.settings-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
+.setting-group {
+    margin-bottom: 20px; padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-
+.setting-group:last-of-type { border-bottom: none; }
+.setting-group h3 {
+    font-size: 1.05em; color: #f8e8ff;
+    margin-bottom: 12px; font-weight: 600;
+}
 .settings-panel label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    color: #f8bbd0;
+    display: block; font-size: 0.85em;
+    margin-bottom: 4px; color: #d8b8e0;
+    margin-top: 8px;
 }
-
 .settings-panel input[type="text"],
-.settings-panel input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ff80ab;
-    border-radius: 5px;
-    background-color: rgba(255,255,255,0.1);
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
+.settings-panel input[type="date"],
+.settings-panel input[type="file"] {
+    width: 100%; padding: 9px; margin-bottom: 8px;
+    border: 1px solid #5a325a; border-radius: 4px;
+    background-color: rgba(255,255,255,0.05);
+    color: #f0d8f8; font-family: 'Montserrat', sans-serif; font-size: 0.9em;
 }
 .settings-panel input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); /* Makes the date picker icon visible on dark backgrounds */
+    filter: invert(0.8) brightness(1.1) sepia(0.2) saturate(4) hue-rotate(240deg);
 }
-
+.settings-panel input[type="file"]::-webkit-file-upload-button {
+    background-color: #75507b; color: #fff; border:none; padding: 6px 10px;
+    border-radius: 3px; cursor: pointer; margin-right: 8px; font-size: 0.85em;
+}
 
 .settings-panel button {
-    background-color: #e91e63; /* Hot pink */
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    text-align: center;
-    font-size: 0.95em;
-    margin: 10px 5px 5px 0;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
+    background-color: #e91e63; color: white; border: none;
+    padding: 9px 14px; border-radius: 4px; cursor: pointer;
+    transition: background-color 0.2s; font-family: 'Montserrat', sans-serif;
+    font-size: 0.85em; margin-top: 5px;
+}
+.settings-panel button:hover { background-color: #c2185b; }
+
+button.remove-avatar-btn, #removeBackgroundButton {
+    background-color: #75507b; margin-bottom: 10px;
+    display: inline-block; width: auto; margin-right: 10px;
+}
+button.remove-avatar-btn:hover, #removeBackgroundButton:hover { background-color: #5a325a; }
+
+#saveAllSettingsButton {
+    background-color: #4CAF50; display: block; width: 100%;
+    padding: 11px; font-size: 0.95em; margin-top: 15px;
+}
+#saveAllSettingsButton:hover { background-color: #45a049; }
+
+.milestones-container h3 { margin-top: 15px; }
+.milestones-container ul { list-style: none; padding: 0; }
+.milestones-container li {
+    padding: 4px 0; font-size: 0.8em;
+    color: #c0a8c8;
 }
 
-.settings-panel button:hover {
-    background-color: #c2185b; /* Darker pink */
-}
-
-.milestones-section h4 {
-    color: #ffaec9;
-    margin-bottom: 10px;
-}
-.milestones-section ul {
-    list-style: none;
-    padding-left: 5px;
-}
-.milestones-section li {
-    margin-bottom: 8px;
-    font-size: 0.9em;
-    color: #e0e0e0;
-}
-
-.close-settings-btn {
-    display: block;
-    width: 100px;
-    margin: 20px auto 0 auto;
-    background-color: #777 !important; /* Distinct close button color */
-}
-.close-settings-btn:hover {
-    background-color: #555 !important;
-}
-
-/* Responsive Adjustments (Optional, but good practice) */
+/* Responsive Adjustments */
 @media (max-height: 700px) { /* For shorter screens */
-    #appTitle { font-size: 1.8em; }
-    .avatar-placeholder { width: 60px; height: 60px; }
-    .partner-name { font-size: 1.2em; }
-    .days-circle { width: 170px; height: 170px; border-width: 6px; }
-    .days-count-number { font-size: 3.8em; }
-    .love-status-text, .days-label-text { font-size: 1.1em; }
-    .settings-panel { padding-top: 50px; }
+    .avatar-display { width: 65px; height: 65px; }
+    .partner-name { font-size: 1.15em; }
+    .heart-separator svg { width: 30px; }
+    .days-circle-outer { width: 175px; height: 175px; padding: 6px;}
+    .days-count { font-size: 3.9em; }
+    .days-status, .days-unit { font-size: 1.1em; }
+    .couple-info { margin-bottom: 25px; }
+    #appTitleDisplay { font-size: 2em; }
 }
-
 @media (max-width: 360px) { /* For very narrow screens */
-     #appTitle { font-size: 1.6em; }
-    .avatar-placeholder { width: 50px; height: 50px; }
-    .partner-name { font-size: 1.1em; }
-    .heart-icon-main { font-size: 2em; }
-    .days-circle { width: 150px; height: 150px; border-width: 5px; }
-    .days-count-number { font-size: 3.2em; }
-    .love-status-text, .days-label-text { font-size: 1em; }
+    #appTitleDisplay { font-size: 1.8em; }
+    .avatar-display { width: 55px; height: 55px; }
+    .partner-name { font-size: 1.05em; }
+    .days-circle-outer { width: 155px; height: 155px;}
+    .days-count { font-size: 3.4em; }
 }
