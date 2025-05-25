@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         DAYS_STATUS: "Đang yêu",
         DAYS_UNIT: "Ngày",
         P1_DEFAULT_AVATAR_SRC: "img/thiennguyen.jpg",
-        P2_DEFAULT_AVATAR_SRC: "img/phuongthao.jpg"
+        P2_DEFAULT_AVATAR_SRC: "img/phuongthao.jpg",
+        DEFAULT_BACKGROUND_SRC: "img/thienthao.jpg"
     };
 
     // --- Settings Panel Toggle ---
@@ -125,11 +126,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Background Image ---
-    function applyAppBackground(url) {
-        if (url) {
-            appContainer.style.backgroundImage = `url('${url}')`;
+    function applyAppBackground(userUrl, defaultUrl) {
+        let imageUrlToApply = null;
+
+        if (userUrl) { // User has provided a URL
+            imageUrlToApply = userUrl;
+        } else if (defaultUrl) { // No user URL, try default
+            imageUrlToApply = defaultUrl;
+        }
+
+        if (imageUrlToApply) {
+            appContainer.style.backgroundImage = `url('${imageUrlToApply}')`;
             appContainer.classList.add('custom-background-active');
-        } else {
+            // Test if image loaded (optional, good for debugging)
+            const imgTest = new Image();
+            imgTest.src = imageUrlToApply;
+            imgTest.onload = () => console.log("Background image loaded successfully:", imageUrlToApply);
+            imgTest.onerror = () => console.error("Failed to load background image:", imageUrlToApply);
+
+        } else { // No user URL and no default, or both failed (rely on CSS base color)
             appContainer.style.backgroundImage = 'none';
             appContainer.classList.remove('custom-background-active');
         }
@@ -137,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
     removeBackgroundButton.addEventListener('click', () => {
         localStorage.removeItem(STORAGE_KEYS.BACKGROUND_IMAGE);
         backgroundImageUrlInput.value = '';
-        applyAppBackground(null);
+        // When user removes their custom background, revert to the default background
+        applyAppBackground(null, DEFAULTS.DEFAULT_BACKGROUND_SRC);
     });
 
     // --- Load, Save, Update ---
@@ -165,7 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const p2StoredAvatar = localStorage.getItem(STORAGE_KEYS.P2_AVATAR);
         // And this line:
         displayAvatar(avatar2Image, avatar2DisplayContainer, p2StoredAvatar, DEFAULTS.P2_DEFAULT_AVATAR_SRC);
-        applyAppBackground(localStorage.getItem(STORAGE_KEYS.BACKGROUND_IMAGE));
+        const storedBackgroundUrl = localStorage.getItem(STORAGE_KEYS.BACKGROUND_IMAGE);
+        applyAppBackground(storedBackgroundUrl, DEFAULTS.DEFAULT_BACKGROUND_SRC);
 
         updateDaysAndMilestones();
     }
@@ -180,7 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEYS.DAYS_UNIT, daysUnitInput.value.trim() || DEFAULTS.DAYS_UNIT);
         localStorage.setItem(STORAGE_KEYS.BACKGROUND_IMAGE, backgroundImageUrlInput.value.trim());
         // Avatars are saved on file change, no need to re-save here unless you want to clear if input is empty
-
+        const userBgUrl = backgroundImageUrlInput.value.trim();
+        if (userBgUrl) {
+            localStorage.setItem(STORAGE_KEYS.BACKGROUND_IMAGE, userBgUrl);
+            applyAppBackground(userBgUrl, DEFAULTS.DEFAULT_BACKGROUND_SRC); // Apply user's choice
+        } else {
+            // If user clears the input, it implies they want to remove custom BG
+            // and revert to default or no BG if default is also not set.
+            localStorage.removeItem(STORAGE_KEYS.BACKGROUND_IMAGE);
+            applyAppBackground(null, DEFAULTS.DEFAULT_BACKGROUND_SRC);
+        }
         applySettingsFromStorageToDisplay(); // Refresh display with newly saved settings
         alert("Settings Saved!");
     }
