@@ -14,6 +14,11 @@
 
             <header class="app-header">
                 <h1 id="appTitleDisplay">Been Love Memory</h1>
+                <!-- ĐẶT NÚT NHẠC VÀO ĐÂY -->
+                </br>
+                <div class="music-toggle-button-header" id="musicToggleButtonHeader">
+                    <span class="music-icon">🎵</span>
+                </div>
             </header>
 
             <main class="main-content">
@@ -22,7 +27,7 @@
                         <div class="avatar-display" id="avatar1DisplayContainer">
                             <img id="avatar1Image" src="" alt="Partner 1">
                         </div>
-                        <span class="partner-name" id="partner1NameDisplay">Partner 1</span>
+                        <span class="partner-name" id="partner1NameDisplay">Nguyễn Thi Thiên</span>
                     </div>
                     <div class="heart-separator">
                         <svg viewBox="0 0 32 29.6">
@@ -33,7 +38,7 @@
                         <div class="avatar-display" id="avatar2DisplayContainer">
                             <img id="avatar2Image" src="" alt="Partner 2">
                         </div>
-                        <span class="partner-name" id="partner2NameDisplay">Partner 2</span>
+                        <span class="partner-name" id="partner2NameDisplay">Nguyễn Thị Phương Thảo</span>
                     </div>
                 </div>
 
@@ -49,7 +54,11 @@
             </main>
         </div>
     </div>
-
+<!-- NEW: Audio Element -->
+<audio id="backgroundMusicPlayer" loop>
+    <source src="audio/motdoi.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
     <div class="settings-panel-overlay" id="settingsPanelOverlay">
         <div class="settings-panel">
             <div class="settings-header">
@@ -57,6 +66,14 @@
                 <button id="closeSettingsButton" class="close-button">×</button>
             </div>
             <div class="settings-body">
+                <div class="setting-group">
+                    <h3>Music</h3>
+                    <button id="toggleMusicButton">Play Music</button>
+                    <div>
+                        <label for="volumeControl">Volume:</label>
+                        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="0.5">
+                    </div>
+                </div>
                 <div class="setting-group">
                     <h3>Couple</h3>
                     <label for="partner1NameInput">Your Name:</label>

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         P2_DEFAULT_AVATAR_SRC: "img/phuongthao.jpg",
         DEFAULT_BACKGROUND_SRC: "img/thienthao.jpg"
     };
-
+    
     // --- Settings Panel Toggle ---
     menuIconToggle.addEventListener('click', () => settingsPanelOverlay.classList.add('open'));
     closeSettingsButton.addEventListener('click', () => settingsPanelOverlay.classList.remove('open'));
@@ -187,6 +187,133 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDaysAndMilestones();
     }
 
+// === MUSIC ELEMENTS AND LOGIC ===
+const musicPlayer = document.getElementById('backgroundMusicPlayer');
+// THAY ĐỔI ID Ở ĐÂY
+const musicToggleButtonMain = document.getElementById('musicToggleButtonHeader'); // Sử dụng ID mới
+const musicIconSpan = musicToggleButtonMain ? musicToggleButtonMain.querySelector('.music-icon') : null;
+    // Kiểm tra các element nhạc cơ bản
+    if (!musicPlayer) {
+        console.error("Music player element (#backgroundMusicPlayer) not found! Music will not work.");
+        // Không return ở đây nếu các phần khác của app vẫn cần chạy
+    }
+    if (!musicToggleButtonMain) {
+        console.error("Main music toggle button (#musicToggleButtonMain) not found!");
+    }
+    if (musicToggleButtonMain && !musicIconSpan) {
+        console.error("Music icon span (.music-icon) inside button not found!");
+    }
+
+    const MUSIC_STORAGE_PREFIX = 'loveDaysApp_Music_v2_'; // Thay đổi prefix để reset state nếu cần
+    const MUSIC_STORAGE_KEYS = {
+        IS_PLAYING: `${MUSIC_STORAGE_PREFIX}isPlaying`, // Sẽ lưu 'true' hoặc 'false'
+        VOLUME: `${MUSIC_STORAGE_PREFIX}volume`
+    };
+
+    // Hàm cập nhật giao diện nút nhạc (icon và class)
+    function updateMusicButtonUI() {
+        if (!musicPlayer || !musicToggleButtonMain || !musicIconSpan) return;
+
+        if (musicPlayer.paused) {
+            musicToggleButtonMain.classList.remove('playing');
+            musicIconSpan.innerHTML = '🎵'; // Hoặc '▶️' nếu bạn muốn icon play
+        } else {
+            musicToggleButtonMain.classList.add('playing');
+            musicIconSpan.innerHTML = '🎶'; // Hoặc '⏸️' nếu bạn muốn icon pause
+        }
+    }
+
+    // Hàm cố gắng phát nhạc
+    async function attemptToPlayMusic() {
+        if (!musicPlayer) return;
+
+        if (musicPlayer.paused) {
+            try {
+                await musicPlayer.play(); // play() trả về một Promise
+                console.log("Music playback started or resumed.");
+                localStorage.setItem(MUSIC_STORAGE_KEYS.IS_PLAYING, 'true');
+            } catch (error) {
+                console.warn("Music play was prevented or failed:", error);
+                // Trình duyệt có thể chặn tự động phát nếu không có tương tác người dùng
+                // hoặc nếu đây là lần đầu tải trang.
+                localStorage.setItem(MUSIC_STORAGE_KEYS.IS_PLAYING, 'false');
+            }
+        }
+        updateMusicButtonUI(); // Luôn cập nhật UI sau khi cố gắng play/pause
+    }
+
+    // Hàm tạm dừng nhạc
+    function pauseMusic() {
+        if (!musicPlayer) return;
+
+        musicPlayer.pause();
+        console.log("Music playback paused.");
+        localStorage.setItem(MUSIC_STORAGE_KEYS.IS_PLAYING, 'false');
+        updateMusicButtonUI();
+    }
+
+    // Gán sự kiện click cho nút nhạc chính
+    if (musicToggleButtonMain) {
+        musicToggleButtonMain.addEventListener('click', () => {
+            if (!musicPlayer) {
+                alert("Lỗi: Không tìm thấy trình phát nhạc.");
+                return;
+            }
+            if (musicPlayer.paused) {
+                attemptToPlayMusic();
+            } else {
+                pauseMusic();
+            }
+        });
+    }
+
+    // Load cài đặt nhạc (âm lượng, trạng thái phát trước đó)
+    function loadMusicSettings() {
+        if (!musicPlayer) return;
+
+        const savedVolume = localStorage.getItem(MUSIC_STORAGE_KEYS.VOLUME);
+        if (savedVolume !== null) {
+            musicPlayer.volume = parseFloat(savedVolume);
+        } else {
+            musicPlayer.volume = 0.5; // Âm lượng mặc định
+        }
+        // Chúng ta không cố gắng tự động phát nhạc khi tải trang.
+        // Người dùng phải tự nhấn nút.
+        // Chỉ cập nhật UI của nút dựa trên trạng thái `paused` mặc định của player.
+        updateMusicButtonUI();
+    }
+
+    // --- Cài đặt nhạc trong Settings Panel (NẾU BẠN VẪN CÓ) ---
+    const toggleMusicButtonSettings = document.getElementById('toggleMusicButton'); // Nút trong settings
+    const volumeControl = document.getElementById('volumeControl');
+
+    if (toggleMusicButtonSettings) {
+        toggleMusicButtonSettings.addEventListener('click', () => {
+            if (!musicPlayer) return;
+            if (musicPlayer.paused) {
+                attemptToPlayMusic();
+            } else {
+                pauseMusic();
+            }
+            // Đồng bộ text của nút trong settings (nếu nó khác icon)
+            toggleMusicButtonSettings.textContent = musicPlayer.paused ? 'Play Music' : 'Pause Music';
+        });
+    }
+
+    if (volumeControl) {
+        // Load và set giá trị ban đầu cho volumeControl từ localStorage hoặc default
+        if (musicPlayer) volumeControl.value = musicPlayer.volume;
+
+        volumeControl.addEventListener('input', () => {
+            if (musicPlayer) {
+                musicPlayer.volume = volumeControl.value;
+                localStorage.setItem(MUSIC_STORAGE_KEYS.VOLUME, volumeControl.value);
+            }
+        });
+    }
+    // --- HẾT PHẦN CÀI ĐẶT NHẠC TRONG SETTINGS PANEL ---
+
+    // === KẾT THÚC MUSIC LOGIC ===
 
     function saveAllSettingsFromInputs() {
         localStorage.setItem(STORAGE_KEYS.P1_NAME, partner1NameInput.value.trim() || DEFAULTS.P1_NAME);

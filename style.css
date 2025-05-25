@@ -325,3 +325,76 @@ button.remove-avatar-btn:hover, #removeBackgroundButton:hover { background-color
     .days-circle-outer { width: 155px; height: 155px;}
     .days-count { font-size: 3.4em; }
 }
+
+
+/* Style cho header để chứa nút nhạc */
+.app-header {
+    padding: 20px; /* Giữ padding hiện tại */
+    text-align: center; /* Căn giữa H1 và nút nhạc nếu chúng là inline-block hoặc block với margin auto */
+    margin-top: 40px; /* Vẫn giữ để không bị đè bởi menu icon */
+    position: relative; /* Để menu icon vẫn định vị được so với header */
+    display: flex; /* Sử dụng flexbox để căn chỉnh tiêu đề và nút nhạc */
+    flex-direction: column; /* Xếp chồng tiêu đề và nút nhạc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+}
+
+#appTitleDisplay {
+    /* Giữ nguyên style hiện tại của bạn cho appTitleDisplay */
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.3em; /* Hoặc kích thước bạn đã dùng */
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 1px 1px 0px #c1a8c9, 2px 2px 3px rgba(90, 50, 90, 0.7);
+    margin-bottom: 10px; /* Tạo khoảng cách giữa tiêu đề và nút nhạc */
+}
+
+/* Style mới cho nút nhạc trong header */
+.music-toggle-button-header {
+    /* Không cần position: fixed nữa */
+    width: 45px;     /* Kích thước nút nhỏ hơn một chút cho phù hợp với header */
+    height: 45px;
+    background-color: rgba(255, 105, 180, 0.7); /* Màu hồng bán trong suốt */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    user-select: none;
+    /* margin-top: 10px; /* Bỏ margin-top ở đây vì #appTitleDisplay đã có margin-bottom */
+}
+
+.music-toggle-button-header:hover {
+    background-color: rgba(255, 105, 180, 0.9);
+    transform: scale(1.05);
+}
+
+.music-toggle-button-header .music-icon {
+    font-size: 22px;  /* Kích thước nốt nhạc nhỏ hơn */
+    color: #5d3b6f; /* Màu tím cho nốt nhạc */
+    transition: transform 0.3s ease;
+}
+
+.music-toggle-button-header.playing .music-icon {
+    color: #4a2d59; /* Tím đậm hơn chút khi đang phát */
+    /* animation: pulseIconSlightly 1.5s infinite ease-in-out; */ /* Hiệu ứng nhẹ nhàng hơn */
+}
+
+/* @keyframes pulseIconSlightly {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); opacity: 0.8; }
+} */
+
+/* Đảm bảo menu icon ở góc trên bên trái không bị ảnh hưởng nhiều */
+.menu-icon {
+    position: absolute;
+    top: 25px; /* Điều chỉnh nếu cần sau khi header thay đổi display flex */
+    left: 20px;
+    font-size: 26px;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1001;
+    text-shadow: 1px 1px 0px #c1a8c9, 1px 1px 2px rgba(90, 50, 90, 0.5);
+}
