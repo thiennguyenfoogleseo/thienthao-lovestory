@@ -50,7 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
         P1_NAME: "Nguyễn Thi Thiên",
         P2_NAME: "Nguyễn Thị Phương Thảo",
         DAYS_STATUS: "Đang yêu",
-        DAYS_UNIT: "Ngày"
+        DAYS_UNIT: "Ngày",
+        P1_DEFAULT_AVATAR_SRC: "img/thiennguyen.jpg",
+        P2_DEFAULT_AVATAR_SRC: "img/phuongthao.jpg"
     };
 
     // --- Settings Panel Toggle ---
@@ -63,21 +65,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Avatar Handling ---
-    function displayAvatar(imgElement, containerElement, dataUrl) {
-        if (dataUrl) {
+    function displayAvatar(imgElement, containerElement, dataUrl, defaultImagePath) {
+        if (dataUrl) { // User has selected an avatar (DataURL)
             imgElement.src = dataUrl;
             imgElement.style.display = 'block';
-            containerElement.style.backgroundImage = 'none';
-        } else {
+            containerElement.style.backgroundImage = 'none'; // Hide SVG background
+            imgElement.onerror = () => { // Fallback if DataURL somehow fails (rare)
+                imgElement.style.display = 'none';
+                containerElement.style.backgroundImage = ''; // Re-enable CSS default SVG
+            };
+        } else if (defaultImagePath) { // No user avatar, try default image path
+            imgElement.src = defaultImagePath;
+            imgElement.style.display = 'block';
+            containerElement.style.backgroundImage = 'none'; // Hide SVG background
+            imgElement.onerror = () => { // Fallback if default image path is wrong or file missing
+                console.error("Default avatar image not found:", defaultImagePath);
+                imgElement.style.display = 'none';
+                containerElement.style.backgroundImage = ''; // Re-enable CSS default SVG
+            };
+        } else { // No user avatar AND no default image path specified, use CSS SVG
             imgElement.src = '';
             imgElement.style.display = 'none';
-            containerElement.style.backgroundImage = ''; // Rely on CSS default
+            containerElement.style.backgroundImage = ''; // Re-enable CSS default SVG
         }
     }
 
     function handleAvatarFileInput(event, storageKey, imgEl, containerEl) {
         const file = event.target.files[0];
-        if (file && file.type.startsWith('image/')) {
+        if (file && file.type.startsWith('img/')) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const dataUrl = e.target.result;
@@ -143,8 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
         daysStatusDisplay.textContent = localStorage.getItem(STORAGE_KEYS.DAYS_STATUS) || DEFAULTS.DAYS_STATUS;
         daysUnitDisplay.textContent = localStorage.getItem(STORAGE_KEYS.DAYS_UNIT) || DEFAULTS.DAYS_UNIT;
 
-        displayAvatar(avatar1Image, avatar1DisplayContainer, localStorage.getItem(STORAGE_KEYS.P1_AVATAR));
-        displayAvatar(avatar2Image, avatar2DisplayContainer, localStorage.getItem(STORAGE_KEYS.P2_AVATAR));
+        const p1StoredAvatar = localStorage.getItem(STORAGE_KEYS.P1_AVATAR);
+        // This line is crucial:
+        displayAvatar(avatar1Image, avatar1DisplayContainer, p1StoredAvatar, DEFAULTS.P1_DEFAULT_AVATAR_SRC);
+
+        const p2StoredAvatar = localStorage.getItem(STORAGE_KEYS.P2_AVATAR);
+        // And this line:
+        displayAvatar(avatar2Image, avatar2DisplayContainer, p2StoredAvatar, DEFAULTS.P2_DEFAULT_AVATAR_SRC);
         applyAppBackground(localStorage.getItem(STORAGE_KEYS.BACKGROUND_IMAGE));
 
         updateDaysAndMilestones();
