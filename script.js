@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleAvatarFileInput(event, storageKey, imgEl, containerEl) {
         const file = event.target.files[0];
-        if (file && file.type.startsWith('img/')) {
+        if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const dataUrl = e.target.result;
