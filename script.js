@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const DEFAULTS = {
         APP_TITLE: "Been Love Memory",
-        P1_NAME: "Tên bạn",
-        P2_NAME: "Tên ấy",
+        P1_NAME: "Thiên",
+        P2_NAME: "Thảo",
         DAYS_STATUS: "Đang yêu",
         DAYS_UNIT: "Ngày"
     };
